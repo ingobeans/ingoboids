@@ -4,10 +4,6 @@ body {
     padding: 0;
     width: 100vw;
     height: 100vh;
-    --background-color: #000000;
-    --boid-color: #e08aff;
-    --grid-color: #7264a4;
-    --text-color: #ffffff;
     color: var(--text-color);
     font-family: "Sometype Mono", monospace;
     font-optical-sizing: auto;
