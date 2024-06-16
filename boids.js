@@ -249,11 +249,5 @@ function updateBoids() {
   drawBoids();
 }
 
-document.addEventListener("keydown", function (event) {
-  if (event.key == "e") {
-    moveBoids();
-  }
-});
-
 createBoidsInClouds((mapWidth * mapHeight) / 15408);
 // create a suitable amount of boids for the screen size
