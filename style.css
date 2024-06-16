@@ -1,0 +1,14 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    --background-color: #000000;
+    --boid-color: #e08aff;
+    --grid-color: #7264a4;
+    background-color: var(--background-color);
+}
+canvas {
+    display: block;
+}
