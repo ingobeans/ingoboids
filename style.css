@@ -7,8 +7,27 @@ body {
     --background-color: #000000;
     --boid-color: #e08aff;
     --grid-color: #7264a4;
-    background-color: var(--background-color);
+    --text-color: #ffffff;
+    color: var(--text-color);
+    font-family: "Sometype Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
 }
+
+#main-container {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
 canvas {
+    z-index: -1;
+    position: absolute;
+    left: 0;
+    top: 0;
     display: block;
 }

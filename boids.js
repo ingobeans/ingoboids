@@ -141,6 +141,8 @@ function createBoidsInClouds(amount, clouds = 3) {
     let y = getRandomInt(0, mapHeight);
     let centerX = x + cloudWidth;
     let centerY = y + cloudWidth;
+    let velocityX = Math.random() * 2 - 1;
+    let velocityY = Math.random() * 2 - 1;
 
     for (let i = 0; i < amount / clouds; i++) {
       var boid = new Boid();
@@ -148,7 +150,10 @@ function createBoidsInClouds(amount, clouds = 3) {
         boidProtectedRange * (Math.random() * 2 - 1) * (i % cloudWidth) + x;
       boid.y =
         boidProtectedRange * (Math.random() * 2 - 1) * (i / cloudWidth) + y;
-      boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
+      boid.velocity = normalizeVector([
+        centerX - boid.x + velocityX,
+        centerY - boid.y + velocityY,
+      ]);
       boid.velocity[0] *= boidMinSpeed;
       boid.velocity[1] *= boidMinSpeed;
       boids.push(boid);
@@ -242,12 +247,7 @@ function moveBoids() {
 }
 function drawBoids() {
   for (const boid of boids) {
-    drawCircle(
-      boid.x,
-      boid.y,
-      boidDrawSize,
-      style.getPropertyValue("--boid-color"),
-    );
+    drawCircle(boid.x, boid.y, boidDrawSize, boidColor);
   }
 }
 
