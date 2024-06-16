@@ -3,14 +3,14 @@ ctx = canvas.getContext("2d");
 var style = getComputedStyle(document.body);
 
 let boids = [];
-let boidProtectedRange = 8 * 3;
+let boidProtectedRange = 20;
 let boidVisualRange = 40 * 3;
 let boidDrawSize = boidProtectedRange;
 let boidAvoidFactor = 0.05;
 let boidVelocityMatchingFactor = 0.05;
 let boidCohesionFactor = 0.0005;
 let boidMinSpeed = 3;
-let boidMaxSpeed = 6;
+let boidMaxSpeed = 4;
 let boidWallAvoidSpeed = 0.2 * 3;
 let mapWidth = window.innerWidth;
 let mapHeight = window.innerHeight;
@@ -139,17 +139,18 @@ function createBoidsInClouds(amount, clouds = 3) {
   for (let c = 0; c < clouds; c++) {
     let x = getRandomInt(0, mapWidth);
     let y = getRandomInt(0, mapHeight);
-    let centerX = x + cloudWidth / 2;
-    let centerY = y + cloudWidth / 2;
+    let centerX = x + cloudWidth;
+    let centerY = y + cloudWidth;
 
     for (let i = 0; i < amount / clouds; i++) {
       var boid = new Boid();
       boid.x =
-        boidProtectedRange * (Math.random() * 2 + 1) * (i % cloudWidth) + x;
+        boidProtectedRange * (Math.random() * 2 - 1) * (i % cloudWidth) + x;
       boid.y =
-        boidProtectedRange * (Math.random() * 2 + 1) * (i / cloudWidth) + y;
+        boidProtectedRange * (Math.random() * 2 - 1) * (i / cloudWidth) + y;
       boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
-      console.log(boid.velocity);
+      boid.velocity[0] *= boidMinSpeed;
+      boid.velocity[1] *= boidMinSpeed;
       boids.push(boid);
     }
   }
