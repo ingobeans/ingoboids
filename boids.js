@@ -134,25 +134,6 @@ function createBoidsRandom(amount) {
     boids.push(boid);
   }
 }
-function createBoidsInClouds(amount, clouds = 3) {
-  var cloudWidth = Math.sqrt(amount / clouds);
-  for (let c = 0; c < clouds; c++) {
-    let x = getRandomInt(0, mapWidth);
-    let y = getRandomInt(0, mapHeight);
-    let centerX = x + cloudWidth * 10;
-    let centerY = y + cloudWidth * 10;
-
-    for (let i = 0; i < amount / clouds; i++) {
-      var boid = new Boid();
-      boid.x = boidProtectedRange * (i % cloudWidth) + x;
-      boid.y = boidProtectedRange * (i / cloudWidth) + y;
-      boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
-      boid.velocity[0] *= boidMinSpeed;
-      boid.velocity[1] *= boidMinSpeed;
-      boids.push(boid);
-    }
-  }
-}
 
 function moveBoids() {
   for (const boid of boids) {
@@ -249,5 +230,28 @@ function updateBoids() {
   drawBoids();
 }
 
-createBoidsInClouds((mapWidth * mapHeight) / 15408);
-// create a suitable amount of boids for the screen size
+function createBoidsInClouds(amount, clouds = 3) {
+  var cloudWidth = Math.sqrt(amount / clouds);
+  for (let c = 0; c < clouds; c++) {
+    let x = getRandomInt(0, mapWidth);
+    let y = getRandomInt(0, mapHeight);
+    let centerX = x + cloudWidth * 10;
+    let centerY = y + cloudWidth * 10;
+
+    for (let i = 0; i < amount / clouds; i++) {
+      var boid = new Boid();
+      boid.x = boidProtectedRange * (i % cloudWidth) + x;
+      boid.y = boidProtectedRange * (i / cloudWidth) + y;
+      boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
+      boid.velocity[0] *= boidMinSpeed;
+      boid.velocity[1] *= boidMinSpeed;
+      boids.push(boid);
+    }
+  }
+}
+
+createBoidsInClouds(
+  (mapWidth * mapHeight) / 15408,
+  parseInt((mapWidth * mapHeight) / 339723),
+);
+// create a suitable amount of boids and clouds for the screen size
