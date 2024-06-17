@@ -4,9 +4,12 @@ let backgroundColor = style.getPropertyValue("--background-color");
 let gridColor = style.getPropertyValue("--grid-color");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+let boidsActive = true;
 
 boidProtectedRange = 20;
 boidDrawSize = boidProtectedRange;
+boidMinSpeed = 2;
+boidMaxSpeed = 4;
 
 window.addEventListener("resize", resizeCanvas);
 
@@ -65,6 +68,17 @@ window
 
 updateThemeToSystem();
 
+function toggleBoids() {
+  boidsActive = !boidsActive;
+}
+
+function spawnSuitableAmountBoids() {
+  createBoidsInClouds(
+    (mapWidth * mapHeight) / 15408,
+    parseInt((mapWidth * mapHeight) / 339723),
+  );
+}
+
 function update() {
   backgroundColor = style.getPropertyValue("--background-color");
   gridColor = style.getPropertyValue("--grid-color");
@@ -84,15 +98,13 @@ function update() {
       );
     }
   }
-  moveBoids();
-  drawBoids(ctx);
+  if (boidsActive) {
+    moveBoids();
+    drawBoids(ctx);
+  }
   requestAnimationFrame(update);
 }
 
-createBoidsInClouds(
-  (mapWidth * mapHeight) / 15408,
-  parseInt((mapWidth * mapHeight) / 339723),
-);
-// create a suitable amount of boids and clouds for the screen size
+spawnSuitableAmountBoids();
 
 update();

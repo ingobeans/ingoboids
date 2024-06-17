@@ -9,15 +9,52 @@
         />
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>INGO</title>
+        <title>INGOBEANS</title>
         <link rel="stylesheet" href="style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
     </head>
     <body>
         <canvas id="canvas"></canvas>
         <script src="boids.js"></script>
         <script src="script.js"></script>
         <div id="main-container">
-            <h1>INGO</h1>
+            <div id="settings-container">
+                <button onclick="toggleBoids();">
+                    <div class="icon-text-container">
+                        <i class="fa-solid fa-toggle-off"></i>
+                        <p>background animations?</p>
+                    </div>
+                </button>
+                <button onclick="toggleBoids();">
+                    <div class="icon-text-container">
+                        <i class="fa-solid fa-toggle-off"></i>
+                        <p>theme</p>
+                    </div>
+                </button>
+            </div>
+            <h1>INGOBEANS</h1>
+            <div class="info">
+                <div class="text-container">
+                    <p>
+                        hi there! i'm
+                        <a target="_blank" href="https://github.com/ingobeans"
+                            >ingobeans</a
+                        >!
+                    </p>
+
+                    <div class="icon-text-container">
+                        <i class="fa-brands fa-github"></i>
+                        <p>ingobeans</p>
+                    </div>
+                    <div class="icon-text-container">
+                        <i class="fa-brands fa-discord"></i>
+                        <p>supermegatoto</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
