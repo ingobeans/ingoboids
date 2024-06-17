@@ -5,6 +5,15 @@ let gridColor = style.getPropertyValue("--grid-color");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let boidsActive = true;
+let backgroundAnimationsIcon = document.getElementById(
+  "background-animations-icon",
+);
+let themeIcon = document.getElementById("theme-icon");
+let themeLabel = document.getElementById("theme-label");
+let currentTheme = 0;
+// 0 auto
+// 1 dark
+// 2 light
 
 boidProtectedRange = 20;
 boidDrawSize = boidProtectedRange;
@@ -21,18 +30,20 @@ function resizeCanvas() {
 }
 resizeCanvas();
 
-const themes = {
+let themes = {
   light: {
-    "--background-color": " #f2f2f2",
-    "--boid-color": " #e08aff",
-    "--grid-color": " #0d091c",
-    "--text-color": " #000",
+    "--background-color": "#f2f2f2",
+    "--boid-color": "#e08aff",
+    "--grid-color": "#0d091c",
+    "--text-color": "#000",
+    "--info-color": "#8a8cff",
   },
   dark: {
     "--background-color": "#000000",
     "--boid-color": "#e08aff",
     "--grid-color": "#7264a4",
     "--text-color": "#ffffff",
+    "--info-color": "#8a8cff",
   },
 };
 
@@ -63,13 +74,40 @@ function updateThemeToSystem() {
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", (event) => {
-    updateThemeToSystem();
+    if (currentTheme == 0) {
+      updateThemeToSystem();
+    }
   });
 
 updateThemeToSystem();
 
-function toggleBoids() {
+function backgroundAnimationsButtonClick() {
   boidsActive = !boidsActive;
+  if (boidsActive) {
+    backgroundAnimationsIcon.classList = ["fa-solid fa-toggle-on"];
+  } else {
+    backgroundAnimationsIcon.classList = ["fa-solid fa-toggle-off"];
+  }
+}
+
+function themeButtonClick() {
+  currentTheme += 1;
+  if (currentTheme > 2) {
+    currentTheme = 0;
+  }
+  if (currentTheme == 1) {
+    switchTheme("dark");
+    themeIcon.classList = ["fa-solid fa-moon"];
+    themeLabel.innerText = "theme dark";
+  } else if (currentTheme == 2) {
+    switchTheme("light");
+    themeIcon.classList = ["fa-solid fa-sun"];
+    themeLabel.innerText = "theme light";
+  } else {
+    updateThemeToSystem();
+    themeIcon.classList = ["fa-solid fa-user"];
+    themeLabel.innerText = "theme auto";
+  }
 }
 
 function spawnSuitableAmountBoids() {

@@ -18,20 +18,21 @@
     </head>
     <body>
         <canvas id="canvas"></canvas>
-        <script src="boids.js"></script>
-        <script src="script.js"></script>
         <div id="main-container">
             <div id="settings-container">
-                <button onclick="toggleBoids();">
+                <button onclick="backgroundAnimationsButtonClick();">
                     <div class="icon-text-container">
-                        <i class="fa-solid fa-toggle-off"></i>
+                        <i
+                            class="fa-solid fa-toggle-on"
+                            id="background-animations-icon"
+                        ></i>
                         <p>background animations?</p>
                     </div>
                 </button>
-                <button onclick="toggleBoids();">
+                <button onclick="themeButtonClick();">
                     <div class="icon-text-container">
-                        <i class="fa-solid fa-toggle-off"></i>
-                        <p>theme</p>
+                        <i class="fa-solid fa-user" id="theme-icon"></i>
+                        <p id="theme-label">theme auto</p>
                     </div>
                 </button>
             </div>
@@ -56,5 +57,7 @@
                 </div>
             </div>
         </div>
+        <script src="boids.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

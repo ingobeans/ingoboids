@@ -36,9 +36,9 @@ p {
 button {
     padding-left: 10px;
     padding-right: 10px;
-    margin: 9px;
+    margin-top: 9px;
     border: 0;
-    background-color: #8a8cff;
+    background-color: var(--info-color);
     color: inherit;
     font-family: inherit;
     font-size: inherit;
@@ -61,7 +61,7 @@ button {
     }
 }
 .info {
-    background-color: #8a8cff;
+    background-color: var(--info-color);
     width: 45vw;
     padding: 40px;
     padding-top: 10px;
