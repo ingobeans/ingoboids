@@ -2,7 +2,21 @@ let gridSize = 100;
 let gridPixelSize = 2;
 let backgroundColor = style.getPropertyValue("--background-color");
 let gridColor = style.getPropertyValue("--grid-color");
-let boidColor = style.getPropertyValue("--boid-color");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+boidProtectedRange = 20;
+boidDrawSize = boidProtectedRange;
+
+window.addEventListener("resize", resizeCanvas);
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  mapWidth = canvas.width;
+  mapHeight = canvas.height;
+}
+resizeCanvas();
 
 const themes = {
   light: {
@@ -56,11 +70,12 @@ function update() {
   gridColor = style.getPropertyValue("--grid-color");
   boidColor = style.getPropertyValue("--boid-color");
 
-  drawRect(0, 0, canvas.width, canvas.height, backgroundColor);
+  drawRect(ctx, 0, 0, canvas.width, canvas.height, backgroundColor);
   // draw grid
   for (let x = 0; x < mapWidth / gridSize; x += 1) {
     for (let y = 0; y < mapHeight / gridSize; y += 1) {
       drawRect(
+        ctx,
         x * gridSize,
         y * gridSize,
         gridPixelSize,
@@ -69,8 +84,15 @@ function update() {
       );
     }
   }
-  updateBoids();
+  moveBoids();
+  drawBoids(ctx);
   requestAnimationFrame(update);
 }
+
+createBoidsInClouds(
+  (mapWidth * mapHeight) / 15408,
+  parseInt((mapWidth * mapHeight) / 339723),
+);
+// create a suitable amount of boids and clouds for the screen size
 
 update();

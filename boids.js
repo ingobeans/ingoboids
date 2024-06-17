@@ -1,38 +1,42 @@
-canvas = document.getElementById("canvas");
-ctx = canvas.getContext("2d");
 var style = getComputedStyle(document.body);
+let boidColor = style.getPropertyValue("--boid-color");
 
+let debug = false;
 let boids = [];
-let boidProtectedRange = 20;
+let boidDrawSize = 4;
+let boidProtectedRange = 8 * 3;
 let boidVisualRange = 40 * 3;
-let boidDrawSize = boidProtectedRange;
 let boidAvoidFactor = 0.05;
 let boidVelocityMatchingFactor = 0.05;
 let boidCohesionFactor = 0.0005;
 let boidMinSpeed = 3;
-let boidMaxSpeed = 4;
+let boidMaxSpeed = 6;
 let boidWallAvoidSpeed = 0.2 * 3;
 let mapWidth = window.innerWidth;
 let mapHeight = window.innerHeight;
 
 let mouse = { x: 0, y: 0 };
 let mouseRadius = 25;
+let mousePressed = false;
 
 function updateMouse(event) {
   mouse.x = event.clientX;
   mouse.y = event.clientY;
 }
 
-document.addEventListener("mousemove", updateMouse);
-window.addEventListener("resize", resizeCanvas);
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  mapWidth = canvas.width;
-  mapHeight = canvas.height;
+function mouseDown(event) {
+  mousePressed = true;
+  mouseRadius = 80;
 }
-resizeCanvas();
+
+function mouseUp(event) {
+  mousePressed = false;
+  mouseRadius = 25;
+}
+
+document.addEventListener("mousedown", mouseDown);
+document.addEventListener("mouseup", mouseUp);
+document.addEventListener("mousemove", updateMouse);
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -66,6 +70,13 @@ function avoidColliding(x, y) {
   }
 
   // avoid the mouse
+
+  let mod = 1;
+  if (mousePressed) {
+    mod = -0.3;
+  }
+  // modifier to make boids go toward mouse if mouse is held
+
   if (
     x >= mouse.x - mouseRadius &&
     x <= mouse.x + mouseRadius &&
@@ -73,14 +84,14 @@ function avoidColliding(x, y) {
     y <= mouse.y + mouseRadius
   ) {
     if (x >= mouse.x) {
-      velocity[0] = 4;
+      velocity[0] = 4 * mod;
     } else {
-      velocity[0] = -4;
+      velocity[0] = -4 * mod;
     }
     if (y >= mouse.y) {
-      velocity[1] = 4;
+      velocity[1] = 4 * mod;
     } else {
-      velocity[1] = -4;
+      velocity[1] = -4 * mod;
     }
   }
   velocity[0] *= boidWallAvoidSpeed;
@@ -96,7 +107,7 @@ class Boid {
   }
 }
 
-function drawCircle(x, y, radius, fill, stroke) {
+function drawCircle(ctx, x, y, radius, fill, stroke) {
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
   if (fill) {
@@ -110,7 +121,7 @@ function drawCircle(x, y, radius, fill, stroke) {
   }
 }
 
-function drawRect(x, y, width, height, color) {
+function drawRect(ctx, x, y, width, height, color) {
   ctx.beginPath();
   ctx.rect(x, y, width, height);
   ctx.fillStyle = color;
@@ -128,10 +139,31 @@ function getBoidsInRange(x, y, range) {
   return result;
 }
 
-function createBoidsRandom(amount) {
+function createBoids(amount) {
   for (let i = 0; i < amount; i++) {
     var boid = new Boid();
     boids.push(boid);
+  }
+}
+
+function createBoidsInClouds(amount, clouds = 3) {
+  // creates boids in small seperate clouds
+  var cloudWidth = Math.sqrt(amount / clouds);
+  for (let c = 0; c < clouds; c++) {
+    let x = getRandomInt(0, mapWidth);
+    let y = getRandomInt(0, mapHeight);
+    let centerX = x + cloudWidth * 10;
+    let centerY = y + cloudWidth * 10;
+
+    for (let i = 0; i < amount / clouds; i++) {
+      var boid = new Boid();
+      boid.x = boidProtectedRange * (i % cloudWidth) + x;
+      boid.y = boidProtectedRange * (i / cloudWidth) + y;
+      boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
+      boid.velocity[0] *= boidMinSpeed;
+      boid.velocity[1] *= boidMinSpeed;
+      boids.push(boid);
+    }
   }
 }
 
@@ -219,39 +251,29 @@ function moveBoids() {
     boid.y += boid.velocity[1];
   }
 }
-function drawBoids() {
+function drawBoids(ctx) {
+  boidColor = style.getPropertyValue("--boid-color");
   for (const boid of boids) {
-    drawCircle(boid.x, boid.y, boidDrawSize, boidColor);
-  }
-}
+    drawCircle(ctx, boid.x, boid.y, boidDrawSize, boidColor);
+    if (debug) {
+      drawCircle(ctx, boid.x, boid.y, boidProtectedRange, undefined, "#ff0000");
+      drawCircle(ctx, boid.x, boid.y, boidVisualRange, undefined, "#ff5500");
+      var nearby_boids = getBoidsInRange(
+        boid.x,
+        boid.y,
+        boidProtectedRange,
+      ).filter((b) => b !== boid);
 
-function updateBoids() {
-  moveBoids();
-  drawBoids();
-}
-
-function createBoidsInClouds(amount, clouds = 3) {
-  var cloudWidth = Math.sqrt(amount / clouds);
-  for (let c = 0; c < clouds; c++) {
-    let x = getRandomInt(0, mapWidth);
-    let y = getRandomInt(0, mapHeight);
-    let centerX = x + cloudWidth * 10;
-    let centerY = y + cloudWidth * 10;
-
-    for (let i = 0; i < amount / clouds; i++) {
-      var boid = new Boid();
-      boid.x = boidProtectedRange * (i % cloudWidth) + x;
-      boid.y = boidProtectedRange * (i / cloudWidth) + y;
-      boid.velocity = normalizeVector([centerX - boid.x, centerY - boid.y]);
-      boid.velocity[0] *= boidMinSpeed;
-      boid.velocity[1] *= boidMinSpeed;
-      boids.push(boid);
+      for (const near_boid of nearby_boids) {
+        drawCircle(
+          ctx,
+          near_boid.x,
+          near_boid.y,
+          boidDrawSize + 5,
+          undefined,
+          "#00ff00",
+        );
+      }
     }
   }
 }
-
-createBoidsInClouds(
-  (mapWidth * mapHeight) / 15408,
-  parseInt((mapWidth * mapHeight) / 339723),
-);
-// create a suitable amount of boids and clouds for the screen size
