@@ -24,18 +24,6 @@ function updateMouse(event) {
   mouse.y = event.clientY;
 }
 
-function mouseDown(event) {
-  mousePressed = true;
-  mouseRadius = 80;
-}
-
-function mouseUp(event) {
-  mousePressed = false;
-  mouseRadius = 25;
-}
-
-document.addEventListener("mousedown", mouseDown);
-document.addEventListener("mouseup", mouseUp);
 document.addEventListener("mousemove", updateMouse);
 
 function getRandomInt(min, max) {
@@ -83,15 +71,19 @@ function avoidColliding(x, y) {
     y >= mouse.y - mouseRadius &&
     y <= mouse.y + mouseRadius
   ) {
-    if (x >= mouse.x) {
-      velocity[0] = 4 * mod;
+    if (y == mouse.y) {
+      velocity[0] = 0;
+    } else if (x > mouse.x) {
+      velocity[0] = 1 * mod;
     } else {
-      velocity[0] = -4 * mod;
+      velocity[0] = -1 * mod;
     }
-    if (y >= mouse.y) {
-      velocity[1] = 4 * mod;
+    if (y == mouse.y) {
+      velocity[1] = 0;
+    } else if (y > mouse.y) {
+      velocity[1] = 1 * mod;
     } else {
-      velocity[1] = -4 * mod;
+      velocity[1] = -1 * mod;
     }
   }
   velocity[0] *= boidWallAvoidSpeed;
