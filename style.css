@@ -1,4 +1,11 @@
-html,
+html {
+    --background-color: #000000;
+    --boid-color: #e08aff;
+    --grid-color: #7264a4;
+    --text-color: #ffffff;
+    --info-color: #8a8cff;
+}
+
 body {
     margin: 0;
     padding: 0;
