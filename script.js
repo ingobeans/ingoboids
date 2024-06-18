@@ -113,7 +113,7 @@ function themeButtonClick() {
 function spawnSuitableAmountBoids() {
   createBoidsInClouds(
     (mapWidth * mapHeight) / 15408,
-    parseInt((mapWidth * mapHeight) / 339723),
+    Math.max(parseInt((mapWidth * mapHeight) / 339723), 1),
   );
 }
 
